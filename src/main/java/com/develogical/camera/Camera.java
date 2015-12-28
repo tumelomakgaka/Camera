@@ -1,4 +1,4 @@
-package ic.doc.camera;
+package com.develogical.camera;
 
 public class Camera {
 
