@@ -1,5 +1,5 @@
 package com.develogical.camera;
 
-public interface WriteListener {
+public interface WriteCompleteListener {
     void writeComplete();
 }
