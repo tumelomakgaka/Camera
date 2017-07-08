@@ -1,18 +1,13 @@
 package com.develogical.camera;
 
-import org.jmock.integration.junit4.JUnitRuleMockery;
-import org.junit.Rule;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+
+import static org.mockito.Mockito.*;
 
 public class CameraTest {
-
-    @Rule
-    public JUnitRuleMockery context = new JUnitRuleMockery();
-
     @Test
     public void switchingTheCameraOnPowersUpTheSensor() {
-
-         // write your test here
+        // write your test here
     }
-
 }
