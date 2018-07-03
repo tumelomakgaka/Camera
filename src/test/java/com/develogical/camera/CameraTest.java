@@ -30,7 +30,7 @@ public class CameraTest {
         MemoryCard mc = mock(MemoryCard.class);
         Camera camera = new Camera(sensor, mc);
         camera.powerOn();
-        camera.pressShutter(sensor, mc);
+        camera.pressShutter();
         verify(sensor).readData();
         verify(mc).write(any(), any());
     }
@@ -41,7 +41,7 @@ public class CameraTest {
         MemoryCard mc = mock(MemoryCard.class);
         Camera camera = new Camera(sensor, mc);
         camera.powerOff();
-        camera.pressShutter(sensor, mc);
+        camera.pressShutter();
         verify(sensor, never()).readData();
         verify(mc, never()).write(any(), any());
 
@@ -50,25 +50,19 @@ public class CameraTest {
     @Test
     public void doesNotPowerOffSensorUntilFinishedWritingData() {
         Sensor sensor = mock(Sensor.class);
-        FakeMemoryCard mc = new FakeMemoryCard();
-        Camera camera = new Camera(sensor, mc);
+        ArgumentCaptor<WriteCompleteListener> writeCompleteListenerArgumentCaptor = ArgumentCaptor.forClass(WriteCompleteListener.class);
+        MemoryCard memoryCard = mock(MemoryCard.class);
+        Camera camera = new Camera(sensor, memoryCard);
         camera.powerOn();
-        camera.pressShutter(sensor, mc);
+        camera.pressShutter();
         camera.powerOff();
+
+        verify(memoryCard).write(any(), writeCompleteListenerArgumentCaptor.capture());
 
         verify(sensor, never()).powerDown();
 
-        mc.writeCompleteListener.writeComplete();
-        camera.powerOff();
+        writeCompleteListenerArgumentCaptor.getValue().writeComplete();
+
         verify(sensor).powerDown();
-    }
-
-    private static class FakeMemoryCard implements MemoryCard {
-        public WriteCompleteListener writeCompleteListener;
-
-        @Override
-        public void write(byte[] data, WriteCompleteListener writeCompleteListener) {
-            this.writeCompleteListener = writeCompleteListener;
-        }
     }
 }

@@ -11,21 +11,21 @@ public class Camera {
         tempMc=mc;
     }
 
-    public void pressShutter(Sensor sensor, MemoryCard mc) {
+    public void pressShutter() {
         if(cameraOn==true)
         {
             isCurrentlyWriting = true;
-            mc.write(sensor.readData(), new WriteCompleteListener() {
+            tempMc.write(tempSensor.readData(), new WriteCompleteListener() {
                 @Override
                 public void writeComplete() {
                     isCurrentlyWriting=false;
-
+                    if (!cameraOn) {
+                        tempSensor.powerDown();
+                    }
                 }
             });
         }
-
     }
-
 
 
     public void powerOn() {
@@ -36,8 +36,8 @@ public class Camera {
     public void powerOff() {
         if (isCurrentlyWriting == false){
             tempSensor.powerDown();
-            cameraOn=false;
         }
+        cameraOn=false;
     }
 }
 
